@@ -143,6 +143,7 @@ body {
     z-index: 15;
     transition: transform 0.6s ease-in-out;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    will-change: transform;
 }
 
 .envelope-flap::after {
@@ -377,8 +378,43 @@ body {
 }
 
 .envelope-wrapper.sliding .envelope-flap {
-    transform: rotateX(180deg) translateY(-100vh);
+    transform: rotateX(180deg);
+    opacity: 0;
+}
+
+/* Second flap for sliding - matches flipped state of first flap */
+.envelope-flap-slide {
+    position: absolute;
+    top: -140px;
+    left: 0;
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(180deg, var(--envelope-color) 0%, var(--envelope-flap) 100%);
+    clip-path: polygon(0 100%, 50% 0, 100% 100%);
+    z-index: 4;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.envelope-flap-slide::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background: var(--accent-gold);
+    opacity: 0.15;
+    border-radius: 50%;
+    filter: blur(20px);
+}
+
+.envelope-wrapper.sliding .envelope-flap-slide {
+    opacity: 1;
     transition: transform 0.8s ease-in;
+    transform: translateY(100vh);
 }
 
 /* Back of envelope to fill gap between flap and body */
@@ -423,6 +459,11 @@ body {
     .envelope-flap {
         height: 130px;
         z-index: 20;
+    }
+    
+    .envelope-flap-slide {
+        height: 130px;
+        top: -130px;
     }
     
     .envelope-fold-left,

@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Step 1: Open the envelope flap
         envelopeWrapper.classList.add('opened');
 
-        // Step 2: After flap opens, move flap behind letter then slide envelope down
+        // Step 2: After flap opens, swap flaps and slide envelope down
         setTimeout(() => {
             envelopeWrapper.classList.add('flap-behind');
             envelopeWrapper.classList.add('sliding');
@@ -29,7 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const viewportHeight = window.innerHeight;
             const letterHeight = letterRect.height;
             const currentTop = letterRect.top;
-            const targetTop = (viewportHeight - letterHeight) / 2;
+            const maxHeight = viewportHeight * 0.9;
+            
+            let targetTop;
+            if (letterHeight > maxHeight) {
+                // Letter will scroll, position at top with padding
+                targetTop = viewportHeight * 0.05;
+            } else {
+                // Center the letter
+                targetTop = (viewportHeight - letterHeight) / 2;
+            }
+            
             const moveY = targetTop - currentTop;
             
             letter.style.transform = `translateX(-50%) translateY(calc(-40px + ${moveY}px))`;
