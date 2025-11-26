@@ -1,0 +1,429 @@
+/* CSS Variables */
+:root {
+    --bg-color: #d4e5ed;
+    --envelope-color: #fefefe;
+    --envelope-shadow: #e8e8e8;
+    --envelope-flap: #f5f5f5;
+    --envelope-inner: #f0ece4;
+    --letter-color: #fffef9;
+    --text-primary: #2c3e50;
+    --text-secondary: #5d6d7e;
+    --accent-gold: #c9a962;
+    --accent-gold-dark: #a68a4b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--bg-color) 0%, #b8d4e3 50%, #a8c8d8 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1500px;
+}
+
+/* Envelope Wrapper */
+.envelope-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.envelope-wrapper:hover:not(.opened) {
+    transform: scale(1.02);
+}
+
+.envelope-wrapper:hover:not(.opened) .envelope {
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* Envelope */
+.envelope {
+    position: relative;
+    width: 340px;
+    height: 220px;
+    transition: box-shadow 0.3s ease;
+    /* Clip everything to envelope bounds initially */
+    overflow: hidden;
+}
+
+/* Envelope folds - left triangle */
+.envelope-fold-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 220px;
+    background: var(--envelope-color);
+    clip-path: polygon(0 0, 0 100%, 100% 100%);
+    z-index: 10;
+    transition: transform 0.8s ease-in;
+}
+
+/* Inner shadow on left fold */
+.envelope-fold-left::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom left, rgba(0,0,0,0.08) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+/* Envelope folds - right triangle */
+.envelope-fold-right {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 220px;
+    background: var(--envelope-color);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    z-index: 11;
+    transition: transform 0.8s ease-in;
+}
+
+/* Inner shadow on right fold */
+.envelope-fold-right::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom right, rgba(0,0,0,0.06) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+/* Bottom edge for shadow */
+.envelope-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: var(--envelope-color);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    z-index: 12;
+    transition: transform 0.8s ease-in;
+}
+
+/* Envelope Flap */
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(180deg, var(--envelope-flap) 0%, var(--envelope-color) 100%);
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    transform-origin: top center;
+    z-index: 15;
+    transition: transform 0.6s ease-in-out;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.envelope-flap::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background: var(--accent-gold);
+    opacity: 0.15;
+    border-radius: 50%;
+    filter: blur(20px);
+}
+
+/* Letter - hidden inside envelope initially */
+.letter {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 500px;
+    background: var(--letter-color);
+    border-radius: 4px;
+    z-index: 9;
+    /* Position letter so only a tiny bit would show at top, but flap covers it */
+    top: 60px;
+    transition: transform 0.8s ease-in, clip-path 0.8s ease-in;
+    overflow: hidden;
+    /* Clip letter to only show portion above envelope bottom */
+    clip-path: inset(0 0 340px 0);
+}
+
+.letter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--accent-gold) 0%, var(--accent-gold-dark) 50%, var(--accent-gold) 100%);
+}
+
+.letter-content {
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.letter-header {
+    margin-bottom: 20px;
+}
+
+.letter-date {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.letter-ornament {
+    color: var(--accent-gold);
+    font-size: 14px;
+    margin: 15px 0;
+    letter-spacing: 10px;
+}
+
+.names {
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 2px;
+    line-height: 1.2;
+    margin: 10px 0;
+}
+
+.invite-text {
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin: 25px 0;
+}
+
+.event-details {
+    margin: 30px 0;
+}
+
+.detail-line {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 5px 0;
+}
+
+.detail-line.date {
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 10px 0;
+}
+
+.detail-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.venue {
+    margin: 30px 0;
+    padding: 20px 0;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.venue p {
+    font-size: 18px;
+    color: var(--text-primary);
+    margin: 5px 0;
+}
+
+.venue-address {
+    font-size: 14px !important;
+    color: var(--text-secondary) !important;
+    font-style: italic;
+}
+
+.rsvp-section {
+    margin-top: 30px;
+}
+
+.rsvp-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.rsvp-button {
+    display: inline-block;
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dark) 100%);
+    color: white;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(201, 169, 98, 0.3);
+}
+
+.rsvp-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(201, 169, 98, 0.4);
+    background: linear-gradient(135deg, var(--accent-gold-dark) 0%, var(--accent-gold) 100%);
+}
+
+.letter-footer {
+    margin-top: 30px;
+}
+
+.footer-ornament {
+    color: var(--accent-gold);
+    font-size: 24px;
+}
+
+/* Click hint */
+.click-hint {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-top: 30px;
+    opacity: 0.7;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* ===================
+   ANIMATION STATES
+   =================== */
+
+/* When envelope is opened - flap rotates back */
+.envelope-wrapper.opened .envelope-flap {
+    transform: rotateX(180deg);
+}
+
+.envelope-wrapper.opened .click-hint {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Letter rises slightly when flap opens */
+.envelope-wrapper.opened .letter {
+    transform: translateX(-50%) translateY(-40px);
+    clip-path: inset(0 0 380px 0);
+}
+
+/* Flap goes behind letter after opening animation */
+.envelope-wrapper.flap-behind .envelope-flap {
+    z-index: 4;
+}
+
+/* Remove overflow hidden so letter can be seen */
+.envelope-wrapper.opened .envelope {
+    overflow: visible;
+}
+
+/* Reveal full letter as envelope slides - use same easing as envelope */
+.envelope-wrapper.sliding .letter {
+    clip-path: inset(0 0 0 0);
+    transition: transform 0.8s ease-in, clip-path 0.5s ease-in;
+}
+
+/* Envelope slides down, letter stays in place */
+.envelope-wrapper.sliding .envelope-fold-left,
+.envelope-wrapper.sliding .envelope-fold-right,
+.envelope-wrapper.sliding .envelope-bottom {
+    transform: translateY(100vh);
+}
+
+.envelope-wrapper.sliding .envelope-flap {
+    transform: rotateX(180deg) translateY(-100vh);
+    transition: transform 0.8s ease-in;
+}
+
+/* Back of envelope to fill gap between flap and body */
+.envelope-wrapper.opened .envelope::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--envelope-inner);
+    z-index: 6;
+    transition: transform 0.8s ease-in;
+}
+
+.envelope-wrapper.sliding .envelope::before {
+    transform: translateY(100vh);
+}
+
+
+/* Final state - letter centered on screen */
+.envelope-wrapper.final {
+    cursor: default;
+}
+
+.envelope-wrapper.final .letter {
+    transform: translateX(-50%) translateY(-40px);
+    clip-path: inset(0 0 0 0);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+    .envelope {
+        width: 300px;
+        height: 200px;
+    }
+    
+    .letter {
+        width: 260px;
+    }
+    
+    .names {
+        font-size: 30px;
+    }
+    
+    .letter-content {
+        padding: 30px 20px;
+    }
+}
