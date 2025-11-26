@@ -24,8 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Step 3: Final state - letter centered
         setTimeout(() => {
+            const letter = document.getElementById('letter');
+            const letterRect = letter.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const letterHeight = letterRect.height;
+            const currentTop = letterRect.top;
+            const targetTop = (viewportHeight - letterHeight) / 2;
+            const moveY = targetTop - currentTop;
+            
+            letter.style.transform = `translateX(-50%) translateY(calc(-40px + ${moveY}px))`;
             envelopeWrapper.classList.add('final');
-        }, 1600);
+        }, 1400);
     });
 });
 

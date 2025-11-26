@@ -165,16 +165,17 @@ body {
     left: 50%;
     transform: translateX(-50%);
     width: 300px;
-    height: 500px;
+    height: auto;
+    min-height: 500px;
     background: var(--letter-color);
     border-radius: 4px;
     z-index: 9;
     /* Position letter so only a tiny bit would show at top, but flap covers it */
     top: 60px;
-    transition: transform 0.8s ease-in, clip-path 0.8s ease-in;
+    transition: transform 0.6s ease-in-out;
     overflow: hidden;
     /* Clip letter to only show portion above envelope bottom */
-    clip-path: inset(0 0 340px 0);
+    clip-path: inset(0 0 calc(100% - 120px) 0);
 }
 
 .letter::before {
@@ -345,10 +346,11 @@ body {
     pointer-events: none;
 }
 
-/* Letter rises slightly when flap opens */
+/* Letter rises slightly when flap opens - keep clipped at envelope bottom */
 .envelope-wrapper.opened .letter {
     transform: translateX(-50%) translateY(-40px);
-    clip-path: inset(0 0 380px 0);
+    clip-path: inset(0 0 calc(100% - 120px) 0);
+    transition: transform 0.6s ease-in-out;
 }
 
 /* Flap goes behind letter after opening animation */
@@ -364,7 +366,7 @@ body {
 /* Reveal full letter as envelope slides - use same easing as envelope */
 .envelope-wrapper.sliding .letter {
     clip-path: inset(0 0 0 0);
-    transition: transform 0.8s ease-in, clip-path 0.5s ease-in;
+    transition: transform 0.8s ease-in, clip-path 0.8s ease-in;
 }
 
 /* Envelope slides down, letter stays in place */
@@ -403,9 +405,12 @@ body {
 }
 
 .envelope-wrapper.final .letter {
-    transform: translateX(-50%) translateY(-40px);
     clip-path: inset(0 0 0 0);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    height: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+    transition: transform 0.6s ease-out, clip-path 0.5s ease-in;
 }
 
 /* Responsive */
@@ -415,8 +420,33 @@ body {
         height: 200px;
     }
     
+    .envelope-flap {
+        height: 130px;
+        z-index: 20;
+    }
+    
+    .envelope-fold-left,
+    .envelope-fold-right {
+        height: 200px;
+    }
+    
     .letter {
         width: 260px;
+        top: 50px;
+        clip-path: inset(0 0 calc(100% - 100px) 0);
+    }
+    
+    .envelope-wrapper.opened .letter {
+        clip-path: inset(0 0 calc(100% - 100px) 0);
+    }
+    
+    .envelope-wrapper.sliding .letter {
+        clip-path: inset(0 0 0 0);
+        transition: transform 0.8s ease-in, clip-path 0.8s ease-in;
+    }
+    
+    .envelope-wrapper.final .letter {
+        clip-path: inset(0 0 0 0);
     }
     
     .names {
